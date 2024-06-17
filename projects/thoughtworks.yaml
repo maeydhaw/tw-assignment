@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations:
+    argocd-autopilot.argoproj-labs.io/default-dest-server: https://kubernetes.default.svc
+    argocd.argoproj.io/sync-options: PruneLast=true
+    argocd.argoproj.io/sync-wave: "-2"
+  creationTimestamp: null
+  name: thoughtworks
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: thoughtworks project
+  destinations:
+  - namespace: '*'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+  - '*'
+status: {}
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: thoughtworks
+spec:
+  destination:
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: thoughtworks
+    repoURL: 'https://github.com/maeydhaw/tw-mediawiki'
+    targetRevision: HEAD
+  sources: []
+  project: thoughtworks
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
